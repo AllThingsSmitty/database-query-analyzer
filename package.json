@@ -1,0 +1,43 @@
+{
+  "name": "database-query-analyzer",
+  "version": "0.1.0",
+  "description": "Static analysis tool for SQL query optimization - detect N+1 queries, missing indexes, and inefficient joins",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "dqa": "dist/cli.js"
+  },
+  "scripts": {
+    "dev": "tsx watch src/cli.ts",
+    "build": "tsc",
+    "test": "node --test dist/tests/**/*.test.js",
+    "test:watch": "node --test --watch dist/tests/**/*.test.js",
+    "lint": "eslint src --ext .ts",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "sql",
+    "database",
+    "query",
+    "analysis",
+    "optimization",
+    "n+1",
+    "static-analysis"
+  ],
+  "author": "Matt Smith <mjsmith@unum.com>",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.2.0",
+    "tsx": "^3.14.0",
+    "eslint": "^8.50.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
