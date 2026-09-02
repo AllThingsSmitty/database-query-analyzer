@@ -3,6 +3,7 @@ import { QueryContext, JoinInfo, FieldInfo } from '../types';
 export class Parser {
   parse(query: string): QueryContext {
     const normalized = this.normalizeQuery(query);
+    this.validateQuery(normalized);
 
     return {
       tables: this.extractTables(normalized),
@@ -10,6 +11,19 @@ export class Parser {
       subqueries: this.countSubqueries(normalized),
       selectFields: this.extractSelectFields(normalized),
     };
+  }
+
+  private validateQuery(query: string): void {
+    if (!query.includes('SELECT')) {
+      throw new Error('Invalid query: missing SELECT clause');
+    }
+    if (!query.includes('FROM')) {
+      throw new Error('Invalid query: missing FROM clause');
+    }
+    const fromMatch = query.match(/FROM\s+([a-zA-Z0-9_,\s]+?)(?=WHERE|JOIN|GROUP|ORDER|LIMIT|;|$)/);
+    if (!fromMatch || !fromMatch[1] || !fromMatch[1].trim()) {
+      throw new Error('Invalid query: incomplete FROM clause - missing table name');
+    }
   }
 
   private normalizeQuery(query: string): string {
@@ -36,7 +50,7 @@ export class Parser {
 
   private extractJoins(query: string): JoinInfo[] {
     const joins: JoinInfo[] = [];
-    const joinPattern = /(INNER|LEFT|RIGHT|FULL|CROSS)?\s*JOIN\s+([a-zA-Z0-9_]+)\s+(?:ON|USING)\s*([^\n]+?)(?=WHERE|JOIN|GROUP|ORDER|LIMIT|;|$)/gi;
+    const joinPattern = /(INNER|LEFT|RIGHT|FULL|CROSS)?\s*JOIN\s+([a-zA-Z0-9_]+)(?:\s+(?:ON|USING)\s+([^;]+?))?(?=WHERE|JOIN|GROUP|ORDER|LIMIT|;|$)/gi;
 
     let match;
     while ((match = joinPattern.exec(query)) !== null) {
