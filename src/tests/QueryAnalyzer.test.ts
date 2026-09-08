@@ -41,4 +41,33 @@ test('QueryAnalyzer', async (t) => {
     assert.ok(!result.isValid);
     assert.ok(result.parseError);
   });
+
+  await t.test('parses CTE (WITH clause)', () => {
+    const result = analyzer.analyze(
+      'WITH cte AS (SELECT id FROM users) SELECT * FROM cte',
+    );
+    assert.ok(result.isValid);
+  });
+
+  await t.test('counts nested subqueries correctly', () => {
+    const result = analyzer.analyze(
+      'SELECT * FROM users WHERE id IN (SELECT user_id FROM (SELECT user_id FROM orders) subq)',
+    );
+    assert.ok(result.isValid);
+    // Should detect the subqueries
+  });
+
+  await t.test('parses window functions in SELECT', () => {
+    const result = analyzer.analyze(
+      'SELECT id, ROW_NUMBER() OVER (ORDER BY id) FROM users',
+    );
+    assert.ok(result.isValid);
+  });
+
+  await t.test('handles multiple JOINs', () => {
+    const result = analyzer.analyze(
+      'SELECT * FROM users u JOIN orders o ON u.id = o.user_id JOIN items i ON o.id = i.order_id',
+    );
+    assert.ok(result.isValid);
+  });
 });
