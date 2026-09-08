@@ -73,7 +73,7 @@ export class MissingIndexDetector extends BaseDetector {
   }
 
   private hasWildcardLikeClause(query: string): boolean {
-    const likeMatch = query.match(/LIKE\s+['"]\%[^%]/gi);
+    const likeMatch = query.match(/LIKE\s+['"]%[^%]/gi);
     return likeMatch !== null;
   }
 }

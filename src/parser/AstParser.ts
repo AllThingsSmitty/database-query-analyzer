@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { parse as parseSQL, SelectStmt, DialectName } from 'sql-parser-cst';
 import { QueryContext, JoinInfo, FieldInfo } from '../types.js';
 
@@ -203,13 +204,13 @@ export class AstParser {
     return 'INNER';
   }
 
-  private countSubqueries(stmt: any): number {
+  private countSubqueries(stmt: SelectStmt): number {
     let count = 0;
 
     const traverse = (node: any): void => {
       if (!node) return;
 
-      if (node.type === 'select_stmt') {
+      if (typeof node === 'object' && 'type' in node && (node as Record<string, unknown>).type === 'select_stmt') {
         count++;
       }
 
