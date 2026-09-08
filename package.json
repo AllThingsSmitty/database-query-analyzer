@@ -10,8 +10,8 @@
   "scripts": {
     "dev": "tsx watch src/cli.ts",
     "build": "tsc",
-    "test": "node --test dist/tests/**/*.test.js",
-    "test:watch": "node --test --watch dist/tests/**/*.test.js",
+    "test": "node --test dist/tests/*.test.js",
+    "test:watch": "node --test --watch dist/tests/*.test.js",
     "lint": "eslint src --ext .ts",
     "type-check": "tsc --noEmit"
   },
