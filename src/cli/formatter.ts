@@ -1,4 +1,4 @@
-import { AnalysisResult } from '../types.js';
+import { AnalysisResult, Issue, IssueType } from '../types.js';
 
 const colors = {
   reset: '\x1b[0m',
@@ -29,8 +29,8 @@ export function formatResults(result: AnalysisResult): void {
   const groupedByType = groupIssuesByType(result.issues);
 
   for (const [type, issues] of Object.entries(groupedByType)) {
-    const icon = getIconForType(type as any);
-    const typeLabel = formatTypeLabel(type as any);
+    const icon = getIconForType(type as IssueType);
+    const typeLabel = formatTypeLabel(type as IssueType);
     console.log(`\n${icon} ${typeLabel} (${issues.length})`);
     console.log(`${colors.gray}──────────────────${colors.reset}`);
 
@@ -50,8 +50,8 @@ export function formatResults(result: AnalysisResult): void {
 }
 
 function groupIssuesByType(
-  issues: any[],
-): Record<string, any[]> {
+  issues: Issue[],
+): Record<string, Issue[]> {
   return issues.reduce(
     (acc, issue) => {
       if (!acc[issue.type]) {
@@ -60,7 +60,7 @@ function groupIssuesByType(
       acc[issue.type].push(issue);
       return acc;
     },
-    {} as Record<string, any[]>,
+    {} as Record<string, Issue[]>,
   );
 }
 

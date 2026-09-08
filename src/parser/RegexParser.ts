@@ -54,9 +54,10 @@ export class RegexParser {
 
     let match;
     while ((match = joinPattern.exec(query)) !== null) {
+      const joinType = (match[1]?.toUpperCase() || 'INNER') as 'INNER' | 'LEFT' | 'RIGHT' | 'FULL' | 'CROSS';
       joins.push({
         table: match[2].trim(),
-        type: (match[1]?.toUpperCase() || 'INNER') as any,
+        type: joinType,
         condition: match[3]?.trim(),
       });
     }
@@ -77,13 +78,14 @@ export class RegexParser {
     if (selectMatch) {
       const fieldList = selectMatch[1]
         .split(',')
-        .map(f => f.trim());
+        .map((f: string) => f.trim());
 
       for (const field of fieldList) {
         const isAggregated = /\b(COUNT|SUM|AVG|MAX|MIN)\s*\(/i.test(field);
-        const [table, name] = field.includes('.')
-          ? field.split('.').map(p => p.trim())
+        const parts = field.includes('.')
+          ? field.split('.').map((p: string) => p.trim())
           : [undefined, field];
+        const [table, name] = parts as [string | undefined, string];
 
         fields.push({
           field: name || field,
