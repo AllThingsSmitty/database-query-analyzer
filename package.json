@@ -24,7 +24,7 @@
     "n+1",
     "static-analysis"
   ],
-  "author": "Matt Smith <mjsmith@unum.com>",
+  "author": "Matt Smith",
   "license": "MIT",
   "dependencies": {
     "commander": "^11.0.0",
